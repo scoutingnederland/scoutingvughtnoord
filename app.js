@@ -1,13 +1,12 @@
 // ─── CONFIGURATION ────────────────────────────────────────────────────────────
-// To change the answer: run this in your browser console to get a new hash:
+// Each entry maps a SHA-256 hash of an answer to the page it unlocks.
+// To add a new answer, compute its hash in the browser console:
 //   crypto.subtle.digest('SHA-256', new TextEncoder().encode('your answer'))
 //     .then(b => console.log([...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')))
-//
-// Current answer: "scouting"  (change ANSWER_HASH to update it)
-const ANSWER_HASH = "137950e5d95a9e5187eda457ded686dee2d913dd38fef84570457a538d009641";
-
-// Where to send the user after a correct answer
-const SUCCESS_URL = "secret.html";
+const ANSWERS = [
+  { hash: "137950e5d95a9e5187eda457ded686dee2d913dd38fef84570457a538d009641", url: "secret.html" },
+  { hash: "59b79e5deed02791a9e50feef550a8d80ef3fc105c277c8e519346abd75029ac", url: "blauw.html" },
+];
 // ──────────────────────────────────────────────────────────────────────────────
 
 async function sha256(text) {
@@ -27,11 +26,12 @@ async function checkAnswer(event) {
 
   try {
     const hash = await sha256(input.value);
+    const match = ANSWERS.find((a) => a.hash === hash);
 
-    if (hash === ANSWER_HASH) {
+    if (match) {
       msg.textContent = "Correct! Redirecting...";
       msg.className = "message success";
-      setTimeout(() => (window.location.href = SUCCESS_URL), 800);
+      setTimeout(() => (window.location.href = match.url), 800);
     } else {
       msg.textContent = "Fout antwoord, probeer opnieuw.";
       msg.className = "message error";
