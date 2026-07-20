@@ -9,14 +9,28 @@
 <body>
   <div class="card">
     <h1>Blauw!</h1>
-    <p class="subtitle">Je hebt het goede antwoord gegeven.</p>
+    <p class="subtitle">Goed zo! Maar er is nog een vraag...</p>
 
     <div class="hint-box">
-      <!-- ✏️ Put your secret content here -->
-      Zet hier de inhoud voor de "blauw" pagina.
+      Op welk nummer is jullie terrein?
     </div>
+
+    <form id="answer-form">
+      <input
+        id="answer-input"
+        type="text"
+        placeholder="Jouw antwoord..."
+        autocomplete="off"
+        autofocus
+      />
+      <button type="submit">Controleer &rarr;</button>
+    </form>
+
+    <p id="message" class="message"></p>
 
     <a href="index.html" class="back-link">&larr; Terug naar het begin</a>
   </div>
+
+  <script src="app.js?v=2"></script>
 </body>
 </html>
