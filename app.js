@@ -4,7 +4,7 @@
 //     .then(b => console.log([...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')))
 //
 // Current answer: "scouting"  (change ANSWER_HASH to update it)
-const ANSWER_HASH = "9c7344b16d41bc6712ca8ef9af1b8e9e0c2b47ca8b42d29ebf3a6bebc86e5ee3";
+const ANSWER_HASH = "137950e5d95a9e5187eda457ded686dee2d913dd38fef84570457a538d009641";
 
 // Where to send the user after a correct answer
 const SUCCESS_URL = "secret.html";
