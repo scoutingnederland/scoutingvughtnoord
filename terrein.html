@@ -5,6 +5,89 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>5 — Stam!</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .pin-display {
+      font-size: 2.2rem;
+      letter-spacing: 0.6rem;
+      background: #1a1a2e;
+      border: 2px solid #0f3460;
+      border-radius: 10px;
+      padding: 0.7rem 1rem;
+      margin-bottom: 1.4rem;
+      min-height: 3.4rem;
+      color: #e94560;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+    .pin-display.shake {
+      animation: shake 0.35s ease;
+      border-color: #e94560;
+    }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20%      { transform: translateX(-6px); }
+      40%      { transform: translateX(6px); }
+      60%      { transform: translateX(-4px); }
+      80%      { transform: translateX(4px); }
+    }
+    .numpad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.55rem;
+      margin-bottom: 0.55rem;
+    }
+    .numpad button {
+      width: auto;
+      padding: 1rem;
+      font-size: 1.3rem;
+      font-weight: 600;
+      background: #0f3460;
+      color: #eee;
+      border-radius: 10px;
+      box-shadow: 0 4px 0 #07203d;
+      transition: background 0.1s, transform 0.1s, box-shadow 0.1s;
+    }
+    .numpad button:hover {
+      background: #164a8a;
+    }
+    .numpad button:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #07203d;
+    }
+    .numpad-bottom {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.55rem;
+    }
+    .numpad-bottom button {
+      width: auto;
+      padding: 1rem;
+      font-size: 1.3rem;
+      font-weight: 600;
+      border-radius: 10px;
+      box-shadow: 0 4px 0 #07203d;
+      transition: background 0.1s, transform 0.1s, box-shadow 0.1s;
+    }
+    .numpad-bottom button:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #07203d;
+    }
+    .btn-del {
+      background: #2a1a2e;
+      color: #e94560;
+    }
+    .btn-del:hover { background: #3d1e3d; }
+    .btn-zero {
+      background: #0f3460;
+      color: #eee;
+    }
+    .btn-zero:hover { background: #164a8a; }
+    .btn-ok {
+      background: #e94560;
+      color: #fff;
+    }
+    .btn-ok:hover { background: #c73652; }
+  </style>
 </head>
 <body>
   <div class="card">
@@ -17,7 +100,8 @@
 
     <div class="pin-display" id="pin-display">&nbsp;</div>
 
-    <div class="pin-grid">
+    <!-- 1 2 3 / 4 5 6 / 7 8 9 -->
+    <div class="numpad">
       <button onclick="pinPress('1')">1</button>
       <button onclick="pinPress('2')">2</button>
       <button onclick="pinPress('3')">3</button>
@@ -27,12 +111,13 @@
       <button onclick="pinPress('7')">7</button>
       <button onclick="pinPress('8')">8</button>
       <button onclick="pinPress('9')">9</button>
-      <button onclick="pinPress('0')" style="grid-column: 2">0</button>
     </div>
 
-    <div class="pin-actions">
-      <button onclick="pinClear()">Wissen</button>
-      <button onclick="pinSubmit()">OK &rarr;</button>
+    <!-- ⌫  0  OK -->
+    <div class="numpad-bottom">
+      <button class="btn-del" onclick="pinBackspace()">&#9003;</button>
+      <button class="btn-zero" onclick="pinPress('0')">0</button>
+      <button class="btn-ok" onclick="pinSubmit()">OK</button>
     </div>
 
     <p id="message" class="message"></p>
@@ -40,24 +125,29 @@
     <a href="index.html" class="back-link">&larr; Terug naar het begin</a>
   </div>
 
-  <script src="app.js?v=2"></script>
+  <script src="app.js?v=3"></script>
   <script>
     let pin = "";
+
+    function updateDisplay() {
+      const el = document.getElementById("pin-display");
+      el.innerHTML = pin.length ? "\u25CF".repeat(pin.length) : "&nbsp;";
+    }
 
     function pinPress(digit) {
       if (pin.length >= 8) return;
       pin += digit;
-      document.getElementById("pin-display").textContent = "\u25CF".repeat(pin.length);
+      updateDisplay();
     }
 
-    function pinClear() {
+    function pinBackspace() {
       pin = pin.slice(0, -1);
-      const display = document.getElementById("pin-display");
-      display.innerHTML = pin.length ? "\u25CF".repeat(pin.length) : "&nbsp;";
+      updateDisplay();
     }
 
     async function pinSubmit() {
       const msg = document.getElementById("message");
+      const display = document.getElementById("pin-display");
       if (!pin) return;
       try {
         const hash = await sha256(pin);
@@ -67,10 +157,12 @@
           msg.className = "message success";
           setTimeout(() => (window.location.href = match.url), 800);
         } else {
+          display.classList.add("shake");
+          display.addEventListener("animationend", () => display.classList.remove("shake"), { once: true });
           msg.textContent = "Foute code, probeer opnieuw.";
           msg.className = "message error";
           pin = "";
-          document.getElementById("pin-display").innerHTML = "&nbsp;";
+          setTimeout(updateDisplay, 350);
         }
       } catch (err) {
         msg.textContent = "Fout: open de site via HTTPS (GitHub Pages) of via localhost.";
