@@ -9,14 +9,74 @@
 <body>
   <div class="card">
     <h1>Correct!</h1>
-    <p class="subtitle">Je weet waar ons terrein is.</p>
+    <p class="subtitle">Je weet waar je terrein is.</p>
 
     <div class="hint-box">
-      <!-- ✏️ Put your secret content here -->
       Alvast een hint: 9B 2A 2G 9I
     </div>
 
+    <div class="pin-display" id="pin-display">&nbsp;</div>
+
+    <div class="pin-grid">
+      <button onclick="pinPress('1')">1</button>
+      <button onclick="pinPress('2')">2</button>
+      <button onclick="pinPress('3')">3</button>
+      <button onclick="pinPress('4')">4</button>
+      <button onclick="pinPress('5')">5</button>
+      <button onclick="pinPress('6')">6</button>
+      <button onclick="pinPress('7')">7</button>
+      <button onclick="pinPress('8')">8</button>
+      <button onclick="pinPress('9')">9</button>
+      <button onclick="pinPress('0')" style="grid-column: 2">0</button>
+    </div>
+
+    <div class="pin-actions">
+      <button onclick="pinClear()">Wissen</button>
+      <button onclick="pinSubmit()">OK &rarr;</button>
+    </div>
+
+    <p id="message" class="message"></p>
+
     <a href="index.html" class="back-link">&larr; Terug naar het begin</a>
   </div>
+
+  <script src="app.js?v=2"></script>
+  <script>
+    let pin = "";
+
+    function pinPress(digit) {
+      if (pin.length >= 8) return;
+      pin += digit;
+      document.getElementById("pin-display").textContent = "\u25CF".repeat(pin.length);
+    }
+
+    function pinClear() {
+      pin = pin.slice(0, -1);
+      const display = document.getElementById("pin-display");
+      display.innerHTML = pin.length ? "\u25CF".repeat(pin.length) : "&nbsp;";
+    }
+
+    async function pinSubmit() {
+      const msg = document.getElementById("message");
+      if (!pin) return;
+      try {
+        const hash = await sha256(pin);
+        const match = ANSWERS.find((a) => a.hash === hash);
+        if (match) {
+          msg.textContent = "Correct! Redirecting...";
+          msg.className = "message success";
+          setTimeout(() => (window.location.href = match.url), 800);
+        } else {
+          msg.textContent = "Foute code, probeer opnieuw.";
+          msg.className = "message error";
+          pin = "";
+          document.getElementById("pin-display").innerHTML = "&nbsp;";
+        }
+      } catch (err) {
+        msg.textContent = "Fout: open de site via HTTPS (GitHub Pages) of via localhost.";
+        msg.className = "message error";
+      }
+    }
+  </script>
 </body>
 </html>

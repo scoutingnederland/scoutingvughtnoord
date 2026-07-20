@@ -106,3 +106,48 @@ button:hover {
 .back-link:hover {
   color: #eee;
 }
+
+/* PIN pad */
+.pin-display {
+  font-size: 2rem;
+  letter-spacing: 0.5rem;
+  background: #1a1a2e;
+  border: 1px solid #0f3460;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  margin-bottom: 1.2rem;
+  min-height: 3rem;
+  color: #e94560;
+  text-align: center;
+}
+
+.pin-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+  margin-bottom: 0.6rem;
+}
+
+.pin-grid button {
+  padding: 0.9rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  background: #0f3460;
+  color: #eee;
+  border-radius: 8px;
+  width: auto;
+}
+
+.pin-grid button:hover {
+  background: #1a4a80;
+}
+
+.pin-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+
+.pin-actions button {
+  width: auto;
+}

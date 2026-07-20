@@ -7,6 +7,7 @@ const ANSWERS = [
   { hash: "137950e5d95a9e5187eda457ded686dee2d913dd38fef84570457a538d009641", url: "secret.html" },
   { hash: "59b79e5deed02791a9e50feef550a8d80ef3fc105c277c8e519346abd75029ac", url: "blauw.html" },
   { hash: "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d", url: "terrein.html" },
+  { hash: "3c7f572560e6d2f14680d05690428dbedc48378a6b8015d86024428f36791dad", url: "code.html" },
 ];
 // ──────────────────────────────────────────────────────────────────────────────
 
