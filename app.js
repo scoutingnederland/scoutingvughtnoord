@@ -25,17 +25,24 @@ async function checkAnswer(event) {
   const input = document.getElementById("answer-input");
   const msg = document.getElementById("message");
 
-  const hash = await sha256(input.value);
+  try {
+    const hash = await sha256(input.value);
 
-  if (hash === ANSWER_HASH) {
-    msg.textContent = "Correct! Redirecting...";
-    msg.className = "message success";
-    setTimeout(() => (window.location.href = SUCCESS_URL), 800);
-  } else {
-    msg.textContent = "Wrong answer, try again.";
+    if (hash === ANSWER_HASH) {
+      msg.textContent = "Correct! Redirecting...";
+      msg.className = "message success";
+      setTimeout(() => (window.location.href = SUCCESS_URL), 800);
+    } else {
+      msg.textContent = "Fout antwoord, probeer opnieuw.";
+      msg.className = "message error";
+      input.value = "";
+      input.focus();
+    }
+  } catch (err) {
+    // crypto.subtle only works on HTTPS or localhost, not file://
+    msg.textContent = "Fout: open de site via HTTPS (GitHub Pages) of via localhost.";
     msg.className = "message error";
-    input.value = "";
-    input.focus();
+    console.error("Crypto error:", err);
   }
 }
 
